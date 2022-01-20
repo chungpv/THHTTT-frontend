@@ -7,6 +7,7 @@ import { Field, reduxForm } from 'redux-form'
 import RenderTextField from '../../components/FormHelpers/TextField/RenderTextField'
 import styles from './styles'
 import * as authActions from '../../actions/auth'
+import LinkUi from '@mui/material/Link'
 
 
 export class Form extends Component {
@@ -58,9 +59,9 @@ export class Form extends Component {
                     <Grid item xs>
                     </Grid>
                     <Grid item>
-                        <Link href="#" variant="body2">
+                        <LinkUi href="/auth/signup" variant="body2">
                             {"Don't have an account? Sign Up"}
-                        </Link>
+                        </LinkUi>
                     </Grid>
                 </Grid>
             </form>

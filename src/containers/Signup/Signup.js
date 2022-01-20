@@ -18,7 +18,7 @@ export class Signup extends Component {
 
     render() {
         return (
-            <Container component="main" maxWidth="xs">
+            <Container component="main" maxWidth="xs" sx={{ marginTop: "100px" }}>
                 <CssBaseline />
                 <Box
                     sx={{

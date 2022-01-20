@@ -4,13 +4,14 @@ const styles = theme => ({
         marginBottom: "1rem"
     },
     username: {
-        textDecoration: "none"
+        textDecoration: "none!important",
+        color: "inherit!important"
     },
     title: {
         fontSize: "1.1rem",
         fontWeight: "600",
-        color: "#1b1b1b",
-        textDecoration: "none"
+        color: "inherit!important",
+        textDecoration: "none!important"
     },
     postInfo: {
         fontSize: ".8rem",

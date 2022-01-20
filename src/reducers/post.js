@@ -13,6 +13,9 @@ import {
     FETCH_POST_EDITTING_FAIL,
     FETCH_POST_EDITTING_SUCCESS,
     FETCH_POST_FAIL,
+    FETCH_POST_RE,
+    FETCH_POST_RE_FAIL,
+    FETCH_POST_RE_SUCCESS,
     FETCH_POST_SUCCESS,
     FETCH_PROFILE,
     FETCH_PROFILE_FAIL,
@@ -39,7 +42,9 @@ const initState = {
     singlePost: null,
     singlePostAuthor: null,
     postEditting: null,
-    userProfile: null
+    userProfile: null,
+    page: 1,
+    postsRecommend: []
 }
 
 const PostsReducer = (state = initState, action) => {
@@ -52,11 +57,12 @@ const PostsReducer = (state = initState, action) => {
             }
         }
         case FETCH_POSTS_SUCCESS: {
-            const { data } = action.payload
+            const { posts, page } = action.payload
             return {
                 ...state,
-                posts: data,
-                postsDisplayed: data
+                posts: posts,
+                postsDisplayed: posts,
+                page
             }
         }
         case FETCH_POSTS_FAIL: {
@@ -219,6 +225,25 @@ const PostsReducer = (state = initState, action) => {
                 error,
                 posts: [],
                 postsDisplayed: []
+            }
+        }
+        case FETCH_POST_RE: {
+            return {
+                ...state
+            }
+        }
+        case FETCH_POST_RE_SUCCESS: {
+            const { postsRecommend } = action.payload
+            return {
+                ...state,
+                postsRecommend
+            }
+        }
+        case FETCH_POST_RE_FAIL: {
+            const { error } = action.payload
+            return {
+                ...state,
+                error
             }
         }
         default:

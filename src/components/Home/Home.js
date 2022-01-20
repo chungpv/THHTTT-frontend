@@ -7,7 +7,6 @@ import styles from './styles'
 export class Home extends Component {
     render() {
         const { classes } = this.props
-
         return (
             <div className={classes.home}>
                 <Box

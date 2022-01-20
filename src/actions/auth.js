@@ -5,6 +5,9 @@ import {
     LOGIN,
     LOGIN_FAIL,
     LOGIN_SUCCESS,
+    LOGOUT,
+    LOGOUT_FAIL,
+    LOGOUT_SUCCESS,
     REDIRECT_AUTH,
     REDIRECT_NOT_ADMIN,
     REDIRECT_NOT_AUTH,
@@ -118,6 +121,27 @@ const redirectNotAdmin = () => {
     }
 }
 
+const logout = () => {
+    return {
+        type: LOGOUT
+    }
+}
+
+const logoutSuccess = () => {
+    return {
+        type: LOGOUT_SUCCESS
+    }
+}
+
+const logoutFail = error => {
+    return {
+        type: LOGOUT_FAIL,
+        payload: {
+            error
+        }
+    }
+}
+
 export {
     fetchAuth,
     fetchAuthSuccess,
@@ -130,5 +154,8 @@ export {
     signupFail,
     redirectNotAuth,
     redirectAuth,
-    redirectNotAdmin
+    redirectNotAdmin,
+    logout,
+    logoutSuccess,
+    logoutFail
 }

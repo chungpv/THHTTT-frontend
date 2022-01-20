@@ -23,7 +23,10 @@ import {
     fetchProfileFail,
     fetchProfileSuccess,
     deletePostFail,
-    deletePostSuccess
+    deletePostSuccess,
+    fetchPostsRe,
+    fetchPostsReFail,
+    fetchPostsReSuccess
 } from '../actions/post'
 import {
     fetchTagSuccess,
@@ -36,7 +39,8 @@ import {
     fetchPosts,
     fetchPostEdittingAPI,
     updatePostAPI,
-    deletePostAPI
+    deletePostAPI,
+    fetchPostsReAPI
 } from '../apis/post'
 import { STATUS_CODE } from '../constants'
 import {
@@ -45,6 +49,7 @@ import {
     FETCH_POST,
     FETCH_POSTS,
     FETCH_POST_EDITTING,
+    FETCH_POST_RE,
     FETCH_PROFILE,
     FILTER_POSTS,
     UPDATE_POST
@@ -61,20 +66,19 @@ import { fetchTagAPI } from '../apis/tag'
 function* watchFetchPostsAction() {
     while (true) {
         yield take(FETCH_POSTS)
-        yield put(showLoading())
+        yield delay(1000)
         try {
-            const response = yield call(fetchPosts)
+            const page = yield select(state => state.Post.page)
+            const response = yield call(fetchPosts, page)
             const { data, status } = response
             if (status === STATUS_CODE.SUCCESS) {
-                yield put(fetchPostsSuccess(data))
+                const { items } = data
+                yield put(fetchPostsSuccess(items, page + 1))
             } else {
-                // yield put(fetchPostsFail(data))
+                yield put(fetchPostsFail("Cannot work. Try again"))
             }
         } catch (error) {
-
-        } finally {
-            yield delay(1000)
-            yield put(hideLoading())
+            yield put(fetchPostsFail("Cannot work. Try again"))
         }
     }
 }
@@ -138,6 +142,31 @@ function* watchSinglePost() {
         } finally {
             yield delay(1000)
             yield put(hideLoading())
+        }
+    }
+}
+
+function* watchPostsRecommend() {
+    while (true) {
+        const { payload } = yield take(FETCH_POST_RE)
+        yield delay(3000)
+        try {
+            const { postId } = payload
+            const response = yield call(fetchPostsReAPI, postId)
+            const { data, status } = response
+            if (status === STATUS_CODE.SUCCESS) {
+                const { items } = data
+                yield put(fetchPostsReSuccess(items))
+            } else {
+                throw new Error("Cannot work. Try again")
+            }
+        } catch (error) {
+            let details = _get(error, "response.data", {})
+            if (_.isEmpty(details)) {
+                details = "Cannot work. Try again"
+            }
+            yield put(fetchPostsReFail(details))
+            yield put(push("/"))
         }
     }
 }
@@ -207,8 +236,7 @@ function* processUpdatePost({ payload }) {
 function* watchProfile() {
     while (true) {
         const { payload } = yield take(FETCH_PROFILE)
-        yield put(showLoading())
-        yield delay(800)
+        yield delay(1000)
         try {
             const { username } = payload
             const response = yield call(fetchProfileAPI, username)
@@ -224,9 +252,6 @@ function* watchProfile() {
                 details = "Cannot work. Try again"
             }
             yield put(fetchProfileFail(details))
-        } finally {
-            yield delay(1000)
-            yield put(hideLoading())
         }
     }
 }
@@ -260,7 +285,8 @@ function* processDeletePost() {
 
 function* watchFetchTagAction() {
     while (true) {
-        const {payload} = yield take(FETCH_TAG)
+        const { payload } = yield take(FETCH_TAG)
+        yield delay(1000)
         try {
             const { tagId } = payload
             const response = yield call(fetchTagAPI, tagId)
@@ -276,9 +302,6 @@ function* watchFetchTagAction() {
                 details = "Cannot work. Try again"
             }
             yield put(fetchTagFail(details))
-        } finally {
-            yield delay(1000)
-            yield put(hideLoading())
         }
     }
 }
@@ -293,6 +316,7 @@ function* postSaga() {
     yield fork(watchProfile)
     yield fork(processDeletePost)
     yield fork(watchFetchTagAction)
+    yield fork(watchPostsRecommend)
 }
 
 export default postSaga

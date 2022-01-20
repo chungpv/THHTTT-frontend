@@ -45,7 +45,7 @@ export class Form extends Component {
         const { title, tags, content } = this.state
         const disabled = !(title && tags.length > 0 && content)
         return (
-            <Container component="main" maxWidth="lg" sx={{ bgcolor: "#f0f0f0" }}>
+            <Container component="main" maxWidth="lg" sx={{ bgcolor: "#f0f0f0", marginTop: "100px" }}>
                 <CssBaseline />
                 <Grid container mt={2}>
                     <Grid item xs={12} mb={4} mt={4}>
@@ -108,7 +108,7 @@ export class Form extends Component {
                     <Grid item xs={12}>
                         <SimpleMdeReact
                             options={{
-                                autofocus: true,
+                                autofocus: false,
                                 autoDownloadFontAwesome: true,
                                 spellChecker: false,
                                 lineNumbers: true,

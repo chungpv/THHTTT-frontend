@@ -1,11 +1,16 @@
 const styles = theme => ({
+    boxRecommend: {
+        border: "1px solid #999",
+        marginTop: "20px!important",
+        marginLeft: "20px!important"
+    },
     postItem: {
         width: "100%",
         marginBottom: "1rem"
     },
     username: {
         textDecoration: "none!important",
-        color: "inherit!important"
+        color: "#1127f4!important"
     },
     title: {
         fontSize: "1.1rem",
@@ -18,11 +23,9 @@ const styles = theme => ({
         color: "#5488c7"
     },
     time: {
-        marginLeft: "1rem",
         color: "#9b9b9b!important"
     },
     during: {
-        marginLeft: "1rem",
         color: "#9b9b9b!important"
     },
     email: {

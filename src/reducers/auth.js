@@ -10,7 +10,10 @@ import {
     SIGNUP_FAIL,
     REDIRECT_NOT_AUTH,
     REDIRECT_AUTH,
-    REDIRECT_NOT_ADMIN
+    REDIRECT_NOT_ADMIN,
+    LOGOUT,
+    LOGOUT_SUCCESS,
+    LOGOUT_FAIL
 } from "../constants/auth"
 import toastNotif from '../helpers/toast'
 
@@ -103,6 +106,30 @@ const AuthReducer = (state = initState, action) => {
         case REDIRECT_AUTH:
         case REDIRECT_NOT_ADMIN: {
             return state
+        }
+        case LOGOUT: {
+            return {
+                ...state
+            }
+        }
+        case LOGOUT_SUCCESS: {
+            toastNotif("success", "Logout successfully")
+            return {
+                ...state,
+                isAuth: false,
+                token: null,
+                username: null,
+                role: null,
+                error: null
+            }
+        }
+        case LOGOUT_FAIL: {
+            const { error } = action.payload
+            toastNotif("error", error)
+            return {
+                ...state,
+                error
+            }
         }
         default:
             return state

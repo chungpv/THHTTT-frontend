@@ -67,14 +67,14 @@ export class PostItemProfile extends Component {
                     </Box>
                     <Box sx={{ display: 'flex', flexDirection: 'column' }} ml={2}>
                         <Box sx={{ display: 'flex' }} className={classes.postInfo}>
-                            <Link className={classes.username} to={`/users/${userProfile ? userProfile.username : ""}`}>
+                            <LinkUi className={classes.username} href={`/users/${userProfile ? userProfile.username : ""}`}>
                                 {`@${userProfile ? userProfile.username : ""}`}
-                            </Link>
+                            </LinkUi>
                             <div style={{ marginLeft: 10 }} className={classes.email}>
                                 {`${userProfile ? userProfile.email : ""}`}
                             </div>
                             <div className={classes.time}>
-                                {`Published ${post ? (new Date(post.createdAt)).toLocaleString() : ""}`}
+                                {`Published ${post ? (new Date(post.createdAt * 1000)).toLocaleString() : ""}`}
                             </div>
                             <div className={classes.during}>
                                 {`${Math.round(readingTime(content).minutes)} min`}
@@ -82,9 +82,9 @@ export class PostItemProfile extends Component {
                             </div>
                         </Box>
                         <Box mt={1}>
-                            <Link className={classes.title} to={`/posts/${post ? post._id : ""}`}>
+                            <LinkUi className={classes.title} href={`/posts/${post ? post._id : ""}`}>
                                 {post ? post.title : ""}
-                            </Link>
+                            </LinkUi>
                         </Box>
                         <Box sx={{ display: 'flex' }} mt={1} mb={3}>
                             {displayTag}

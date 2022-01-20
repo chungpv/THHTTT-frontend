@@ -10,7 +10,7 @@ const styles = theme => ({
     },
     editPost: {
         color: "inherit!important",
-        textDecoration: "none"
+        textDecoration: "none!important"
     },
     postItem: {
         width: "100%",

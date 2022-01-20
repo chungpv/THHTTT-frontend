@@ -36,9 +36,9 @@ export class Drawer extends Component {
                     <MainListItems />
                 </List>
                 <Divider />
-                <List>
+                {/* <List>
                     <SecondListItems />
-                </List>
+                </List> */}
             </Drawer>
         )
     }

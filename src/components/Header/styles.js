@@ -44,8 +44,17 @@ const styles = theme => ({
     },
     login: {
         display: "flex",
-        textDecoration: "none",
-        color: "white"
+        textDecoration: "none!important",
+        color: "white!important"
+    },
+    profileLink: {
+        textDecoration: "none!important",
+        color: "inherit!important"
+    },
+    writePost: {
+        textDecoration: "none!important",
+        color: "inherit!important",
+        display: "flex"
     }
 })
 

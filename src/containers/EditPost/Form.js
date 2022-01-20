@@ -59,7 +59,7 @@ export class Form extends Component {
         let { title, tags, content } = this.state
         const disabled = !(title && tags.length > 0 && content)
         return (
-            <Container component="main" maxWidth="lg" sx={{ bgcolor: "#f0f0f0" }}>
+            <Container component="main" maxWidth="lg" sx={{ bgcolor: "#f0f0f0", marginTop: "100px" }}>
                 <CssBaseline />
                 <Grid container mt={2}>
                     <Grid item xs={12} mb={4} mt={4}>

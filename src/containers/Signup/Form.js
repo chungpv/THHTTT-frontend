@@ -10,6 +10,7 @@ import RenderCheckbox from '../../components/FormHelpers/Checkbox/RenderCheckbox
 import RenderTextField from '../../components/FormHelpers/TextField/RenderTextField'
 import styles from './styles'
 import * as authActions from '../../actions/auth'
+import LinkUi from '@mui/material/Link'
 
 
 const schemaPassword = new PasswordValidator()
@@ -98,9 +99,9 @@ export class Form extends Component {
                 </Button>
                 <Grid container justifyContent="flex-end">
                     <Grid item>
-                        <Link href="#" variant="body2">
+                        <LinkUi href="/auth/login" variant="body2">
                             Already have an account? Sign in
-                        </Link>
+                        </LinkUi>
                     </Grid>
                 </Grid>
             </form>

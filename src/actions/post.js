@@ -21,7 +21,10 @@ import {
     FETCH_PROFILE_FAIL,
     DELETE_POST,
     DELETE_POST_SUCCESS,
-    DELETE_POST_FAIL
+    DELETE_POST_FAIL,
+    FETCH_POST_RE,
+    FETCH_POST_RE_SUCCESS,
+    FETCH_POST_RE_FAIL
 } from "../constants/post"
 
 
@@ -31,11 +34,12 @@ const fetchPosts = () => {
     }
 }
 
-const fetchPostsSuccess = data => {
+const fetchPostsSuccess = (posts, page) => {
     return {
         type: FETCH_POSTS_SUCCESS,
         payload: {
-            data
+            posts,
+            page
         }
     }
 }
@@ -224,6 +228,33 @@ const deletePostFail = error => {
     }
 }
 
+const fetchPostsRe = post => {
+    return {
+        type: FETCH_POST_RE,
+        payload: {
+            post
+        }
+    }
+}
+
+const fetchPostsReSuccess = postsRecommend => {
+    return {
+        type: FETCH_POST_RE_SUCCESS,
+        payload: {
+            postsRecommend
+        }
+    }
+}
+
+const fetchPostsReFail = error => {
+    return {
+        type: FETCH_POST_RE_FAIL,
+        payload: {
+            error
+        }
+    }
+}
+
 
 export {
     fetchPosts,
@@ -248,5 +279,8 @@ export {
     fetchProfileFail,
     deletePost,
     deletePostSuccess,
-    deletePostFail
+    deletePostFail,
+    fetchPostsRe,
+    fetchPostsReSuccess,
+    fetchPostsReFail
 }

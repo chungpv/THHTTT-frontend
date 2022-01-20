@@ -13,11 +13,13 @@ import {
     fetchAuthSuccess,
     loginFail,
     loginSuccess,
+    logoutFail,
+    logoutSuccess,
     signupFail,
     signupSuccess
 } from "../actions/auth"
 import { fetchAuthAPI, loginAPI, signupAPI } from "../apis/auth"
-import { getCookie, setCookie } from "../common/cookie"
+import { deleteCookie, getCookie, setCookie } from "../common/cookie"
 import { ACCESS_TOKEN_NAME, STATUS_CODE } from "../constants"
 import {
     LOGIN,
@@ -25,7 +27,8 @@ import {
     REDIRECT_NOT_AUTH,
     REDIRECT_NOT_ADMIN,
     SIGNUP,
-    FETCH_AUTH
+    FETCH_AUTH,
+    LOGOUT
 } from "../constants/auth"
 import _get from "lodash/get"
 import _ from "lodash"
@@ -151,6 +154,16 @@ function* processSignup({ payload }) {
     }
 }
 
+function* processLogout() {
+    try {
+        deleteCookie(ACCESS_TOKEN_NAME)
+        yield put(logoutSuccess())
+        yield put(push("/"))
+    } catch (error) {
+        yield put(logoutFail("Cannot logout!"))
+    }
+}
+
 function* authSaga() {
     yield fork(fetchAuthAction)
     yield takeLatest(LOGIN, processLogin)
@@ -158,6 +171,7 @@ function* authSaga() {
     yield fork(watchRedirectNotAuth)
     yield fork(watchRedirectAuth)
     yield fork(watchRedirectNotAdmin)
+    yield takeLatest(LOGOUT, processLogout)
 }
 
 export default authSaga

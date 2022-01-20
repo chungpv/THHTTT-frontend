@@ -10,16 +10,19 @@ import GlobalLoading from '../../components/GlobalLoading/GlobalLoading'
 import RenderRoutes from '../../components/RenderRoutes/RenderRoutes'
 import { compose } from 'redux'
 import { connect } from 'react-redux'
+import { SkeletonTheme } from "react-loading-skeleton"
 
 
 export class App extends Component {
     render() {
         return (
             <ThemeProvider theme={theme}>
-                <CssBaseline />
-                <ToastContainer />
-                <GlobalLoading />
-                <RenderRoutes />
+                <SkeletonTheme color="white" highlightColor="#DDD">
+                    <CssBaseline />
+                    <ToastContainer />
+                    <GlobalLoading />
+                    <RenderRoutes />
+                </SkeletonTheme>
             </ThemeProvider>
         )
     }

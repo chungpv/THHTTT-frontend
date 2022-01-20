@@ -1,4 +1,4 @@
-import { Avatar, Box, Button, Container, CssBaseline, Grid, Menu, MenuItem } from '@mui/material'
+import { Avatar, Box, Button, Container, CssBaseline, Grid, Menu, MenuItem, Typography } from '@mui/material'
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
@@ -10,6 +10,9 @@ import { withStyles } from '@mui/styles'
 import styles from './styles'
 import ReadingTime from 'reading-time'
 import * as authActions from '../../actions/auth'
+import LinkUi from '@mui/material/Link'
+import SkeletonRecommend from '../../components/SkeletonRecommend/SkeletonRecommend';
+import PostItemRecommend from '../../components/PostItemRecommend/PostItemRecommend';
 
 
 export class SinglePost extends Component {
@@ -24,9 +27,10 @@ export class SinglePost extends Component {
     componentWillMount() {
         const { match, onPostActions, onAuthActions } = this.props
         const { postId } = match.params
-        const { fetchPost } = onPostActions
+        const { fetchPost, fetchPostsRe } = onPostActions
         const { fetchAuth } = onAuthActions
         fetchPost(postId)
+        fetchPostsRe(postId)
         fetchAuth()
     }
 
@@ -83,9 +87,9 @@ export class SinglePost extends Component {
 
     render() {
         const { open, anchorEl } = this.state
-        const { post, author, auth, classes } = this.props
+        const { post, author, auth, classes, postsRecommend } = this.props
         const content = post ? post.content.split("\n").join("\n\n") : ""
-        const authorUsername = author ? author.username : "ab"
+        const authorUsername = author ? author.username : "example"
         let postOptions = null
         if (authorUsername === auth.username) {
             postOptions = (<div>
@@ -111,12 +115,12 @@ export class SinglePost extends Component {
                     <MenuItem
                         onClick={this.handleCloseOptionsPost}
                     >
-                        <Link
-                            to={`/posts/${post ? post._id : ""}/edit`}
+                        <LinkUi
+                            href={`/posts/${post ? post._id : ""}/edit`}
                             className={classes.editPost}
                         >
                             Edit Post
-                        </Link>
+                        </LinkUi>
                     </MenuItem>
                     <MenuItem onClick={this.handleDeletePost}>
                         Delete Post
@@ -124,10 +128,32 @@ export class SinglePost extends Component {
                 </Menu>
             </div>)
         }
+        let displayPostsRecommend
+        if (postsRecommend.length > 0) {
+            displayPostsRecommend = (
+                <Grid container spacing={2} sx={{mb: 10 }}>
+                    {postsRecommend.slice(0, 8).map((item, index) => <PostItemRecommend key={index} post={item.post} author={item.author} />)}
+                </Grid>
+            )
+        } else {
+            displayPostsRecommend = (
+                <Grid container spacing={2} sx={{mb: 10 }}>
+                    <SkeletonRecommend />
+                    <SkeletonRecommend />
+                    <SkeletonRecommend />
+                    <SkeletonRecommend />
+                    <SkeletonRecommend />
+                    <SkeletonRecommend />
+                    <SkeletonRecommend />
+                    <SkeletonRecommend />
+                </Grid>
+            )
+        }
+
         return (
-            <Container component="main" maxWidth="lg" sx={{ display: "flex" }}>
+            <Container component="main" maxWidth="lg" sx={{ marginTop: "100px" }}>
                 <CssBaseline />
-                <Grid container spacing={2} sx={{ mt: 4 }}>
+                <Grid container spacing={2} sx={{ mt: 4, mb: 10 }}>
                     <Grid item xs={3}>
                         <Box sx={{ display: "flex" }}>
                             <Box>
@@ -138,9 +164,9 @@ export class SinglePost extends Component {
                             </Box>
                             <Box ml={2}>
                                 <Box className={classes.postInfo}>
-                                    <Link className={classes.username} to={`/users/${author ? author.username : ""}`}>
+                                    <LinkUi className={classes.username} href={`/users/${author ? author.username : ""}`}>
                                         {`@${author ? author.username : ""}`}
-                                    </Link>
+                                    </LinkUi>
                                     <div className={classes.email}>
                                         {`${author ? author.email : ""}`}
                                     </div>
@@ -167,6 +193,18 @@ export class SinglePost extends Component {
                         </div>
                     </Grid>
                 </Grid>
+                <Container component="main" maxWidth="lg" >
+                    <h2>Related Posts</h2>
+                    {displayPostsRecommend}
+                </Container>
+                <Typography variant="body2" color="text.secondary" align="center" sx={{ mt: 5 }}>
+                    {'Copyright © '}
+                    <LinkUi color="inherit" href="https://mui.com/">
+                        My Website
+                    </LinkUi>{' '}
+                    {new Date().getFullYear()}
+                    {'.'}
+                </Typography>
             </Container>
         )
     }
@@ -176,7 +214,8 @@ const mapStateToProps = state => {
     return {
         post: state.Post.singlePost,
         author: state.Post.singlePostAuthor,
-        auth: state.Auth
+        auth: state.Auth,
+        postsRecommend: state.Post.postsRecommend
     }
 }
 

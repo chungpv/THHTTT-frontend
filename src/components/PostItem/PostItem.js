@@ -57,7 +57,6 @@ export class PostItem extends Component {
                 # {tag.content}
             </LinkUi>
         ))
-
         return (
             <div className={classes.postItem}>
                 <Card sx={{ display: "flex" }}>
@@ -69,9 +68,9 @@ export class PostItem extends Component {
                     </Box>
                     <Box sx={{ display: 'flex', flexDirection: 'column' }} ml={2}>
                         <Box sx={{ display: 'flex' }} className={classes.postInfo}>
-                            <Link className={classes.username} to={`/users/${author ? author.username : ""}`}>
+                            <LinkUi className={classes.username} href={`/users/${author ? author.username : ""}`}>
                                 {`@${author ? author.username : ""}`}
-                            </Link>
+                            </LinkUi>
                             <div style={{ marginLeft: 10 }} className={classes.email}>
                                 {`${author ? author.email : ""}`}
                             </div>
@@ -84,9 +83,9 @@ export class PostItem extends Component {
                             </div>
                         </Box>
                         <Box mt={1}>
-                            <Link className={classes.title} to={`/posts/${post ? post._id : ""}`}>
+                            <LinkUi className={classes.title} href={`/posts/${post ? post._id : ""}`}>
                                 {post ? post.title : ""}
-                            </Link>
+                            </LinkUi>
                         </Box>
                         <Box sx={{ display: 'flex' }} mt={1} mb={3}>
                             {displayTag}

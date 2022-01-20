@@ -1,6 +1,19 @@
 const styles = theme => ({
     drawer123: {
         background: props => props.color
+    },
+    link: {
+        textDecoration: "none!important",
+        color: "inherit!important"
+    },
+    profileLink: {
+        textDecoration: "none!important",
+        color: "inherit!important"
+    },
+    writePost: {
+        textDecoration: "none!important",
+        color: "inherit!important",
+        display: "flex"
     }
 })
 

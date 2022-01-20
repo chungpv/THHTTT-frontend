@@ -13,6 +13,9 @@ import SinglePost from '../../containers/SinglePost/SinglePost'
 import EditPost from '../../containers/EditPost/EditPost'
 import Profile from '../../containers/Profile/Profile'
 import PostsOfTag from '../../containers/PostsOfTag/PostsOfTag'
+import Users from '../../containers/DashboardPage/Users'
+import Posts from '../../containers/DashboardPage/Posts'
+import Tags from '../../containers/DashboardPage/Tags'
 
 
 export class RenderRoutes extends Component {
@@ -21,6 +24,15 @@ export class RenderRoutes extends Component {
             <Switch>
                 <Route path="/dashboard" exact>
                     <Dashboard><DashboardPage /></Dashboard>
+                </Route>
+                <Route path="/dashboard/users" exact>
+                    <Dashboard><Users /></Dashboard>
+                </Route>
+                <Route path="/dashboard/posts" exact>
+                    <Dashboard><Posts /></Dashboard>
+                </Route>
+                <Route path="/dashboard/tags" exact>
+                    <Dashboard><Tags /></Dashboard>
                 </Route>
                 <Route path="/" exact>
                     <div><Header /><Home /></div>

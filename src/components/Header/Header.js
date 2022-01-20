@@ -21,8 +21,11 @@ import { connect } from 'react-redux'
 import { bindActionCreators, compose } from 'redux'
 import * as postActions from '../../actions/post'
 import { Link } from 'react-router-dom'
+import LinkUi from '@mui/material/Link'
 import LoginIcon from '@mui/icons-material/Login'
 import * as authActions from '../../actions/auth'
+import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline'
+import CreateIcon from '@mui/icons-material/Create';
 
 
 const pages = ['Products', 'Pricing', 'Blog']
@@ -34,6 +37,7 @@ export class Header extends Component {
         this.state = {
             anchorElNav: false,
             anchorElUser: false,
+            anchorElPost: false
         }
     }
 
@@ -55,6 +59,12 @@ export class Header extends Component {
         })
     }
 
+    handleOpenPostMenu = () => {
+        this.setState({
+            anchorElPost: true
+        })
+    }
+
     handleCloseNavMenu = () => {
         this.setState({
             anchorElNav: false
@@ -67,6 +77,12 @@ export class Header extends Component {
         })
     }
 
+    handleClosePostMenu = () => {
+        this.setState({
+            anchorElPost: false
+        })
+    }
+
     onSearch = event => {
         const keyword = event.target.value.trim().toLowerCase()
         const { onPostActions } = this.props
@@ -74,21 +90,62 @@ export class Header extends Component {
         filterPosts(keyword)
     }
 
+    onLogout = () => {
+        this.handleCloseNavMenu()
+        const { onAuthActions } = this.props
+        const { logout } = onAuthActions
+        logout()
+    }
+    stringToColor = name => {
+        let hash = 0;
+        let i;
+
+        /* eslint-disable no-bitwise */
+        for (i = 0; i < name.length; i += 1) {
+            hash = name.charCodeAt(i) + ((hash << 5) - hash);
+        }
+
+        let color = '#';
+
+        for (i = 0; i < 3; i += 1) {
+            const value = (hash >> (i * 8)) & 0xff;
+            color += `00${value.toString(16)}`.substr(-2);
+        }
+
+        return color;
+    }
+
+    stringAvatar = name => {
+        return {
+            sx: {
+                bgcolor: this.stringToColor(name),
+                width: 42,
+                height: 42
+            },
+            children: `${name.substring(0, 2).toUpperCase()}`,
+        }
+    }
+
     render() {
-        const { anchorElNav, anchorElUser } = this.state
+        const { anchorElNav, anchorElUser, anchorElPost } = this.state
         const { classes, auth } = this.props
         const { isAuth } = auth
         let displayInfoAuth = null
+        let displayWritePost = null
+        const username = auth ? auth.username : "example"
         if (isAuth) {
             displayInfoAuth = (
                 <Box sx={{ flexGrow: 0 }}>
                     <Tooltip title="User Options">
                         <IconButton onClick={this.handleOpenUserMenu} sx={{ p: 0 }}>
-                            <Avatar alt="Remy Sharp" src="assets/images/avatar.jpeg" />
+                            <Avatar
+                                alt={username}
+                                {...this.stringAvatar(username)}
+                            />
                         </IconButton>
                     </Tooltip>
                     <Menu
-                        sx={{ mt: '45px' }}
+                        sx={{ mt: '45px', top: "-90px" }}
                         id="menu-appbar"
                         anchorEl={anchorElUser}
                         anchorOrigin={{
@@ -103,30 +160,86 @@ export class Header extends Component {
                         open={Boolean(anchorElUser)}
                         onClose={this.handleCloseUserMenu}
                     >
-                        {settings.map((setting) => (
-                            <MenuItem key={setting} onClick={this.handleCloseNavMenu}>
-                                <Typography textAlign="center">{setting}</Typography>
-                            </MenuItem>
-                        ))}
+                        <MenuItem>
+                            <Typography textAlign="center">
+                                <LinkUi href={`/users/${username}`}
+                                    className={classes.profileLink}
+                                >Profile</LinkUi>
+                            </Typography>
+                        </MenuItem>
+                        {
+                            auth.role !== "admin" ? null : (
+                                <MenuItem>
+                                    <Typography textAlign="center">
+                                        <LinkUi href={`/dashboard`}
+                                            className={classes.profileLink}
+                                        >
+                                            Dashboard
+                                        </LinkUi>
+                                    </Typography>
+                                </MenuItem>
+                            )
+                        }
+                        <MenuItem>
+                            <Typography textAlign="center" onClick={this.onLogout}>
+                                Logout
+                            </Typography>
+                        </MenuItem>
+                    </Menu>
+                </Box>
+            )
+            displayWritePost = (
+                <Box sx={{ flexGrow: 0, ml: 10, mr: 5 }}>
+                    <Tooltip title="Post Options">
+                        <IconButton onClick={this.handleOpenPostMenu} sx={{ p: 0 }}>
+                            <DriveFileRenameOutlineIcon sx={{ color: "white" }} />
+                        </IconButton>
+                    </Tooltip>
+                    <Menu
+                        sx={{ mt: '45px', top: "-90px", left: "-50px" }}
+                        id="menu-appbar-post"
+                        anchorEl={anchorElPost}
+                        anchorOrigin={{
+                            vertical: 'top',
+                            horizontal: 'right',
+                        }}
+                        keepMounted
+                        transformOrigin={{
+                            vertical: 'top',
+                            horizontal: 'right',
+                        }}
+                        open={Boolean(anchorElPost)}
+                        onClose={this.handleClosePostMenu}
+                    >
+                        <MenuItem>
+                            <Typography textAlign="center">
+                                <LinkUi href={`/posts/new`}
+                                    className={classes.writePost}
+                                >
+                                    <CreateIcon color="inherit" />
+                                    <span>&nbsp;Write Post</span>
+                                </LinkUi>
+                            </Typography>
+                        </MenuItem>
                     </Menu>
                 </Box>
             )
         } else {
             displayInfoAuth = (
                 <Box mr={10}>
-                    <Link
+                    <LinkUi
                         className={classes.login}
                         href="/auth/login"
                     >
                         <LoginIcon />
                         <span>Login/Signup</span>
-                    </Link>
+                    </LinkUi>
                 </Box>
             )
         }
 
         return (
-            <AppBar position="static">
+            <AppBar position="fixed" sx={{ top: "0", left: "0" }}>
                 <Container maxWidth="xl">
                     <Toolbar disableGutters>
                         <Typography
@@ -135,7 +248,9 @@ export class Header extends Component {
                             component="div"
                             sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
                         >
-                            <img src='/assets/images/logo.png' style={{ width: "4rem" }} alt='Logo' />
+                            <LinkUi href="/">
+                                <img src='/assets/images/logo.png' style={{ width: "3rem" }} alt='Logo' />
+                            </LinkUi>
                         </Typography>
                         <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
                             <IconButton
@@ -148,35 +263,6 @@ export class Header extends Component {
                             >
                                 <MenuIcon />
                             </IconButton>
-                            <Menu
-                                id="menu-appbar"
-                                anchorEl={anchorElNav}
-                                anchorOrigin={{
-                                    vertical: 'bottom',
-                                    horizontal: 'left',
-                                }}
-                                keepMounted
-                                transformOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'left',
-                                }}
-                                open={Boolean(anchorElNav)}
-                                onClose={this.handleCloseNavMenu}
-                                sx={{
-                                    display: { xs: 'block', md: 'none' },
-                                }}
-                            >
-                                <MenuItem>
-                                    <Typography textAlign="center">
-                                        <Link to="/auth/login">Login</Link>
-                                    </Typography>
-                                </MenuItem>
-                                <MenuItem>
-                                    <Typography textAlign="center">
-                                        <Link to="/auth/sigup">Signup</Link>
-                                    </Typography>
-                                </MenuItem>
-                            </Menu>
                         </Box>
                         <Typography
                             variant="h6"
@@ -186,27 +272,7 @@ export class Header extends Component {
                         >
                             <img src='/assets/images/logo.png' style={{ width: "4rem" }} alt='Logo' />
                         </Typography>
-                        <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-                            {/* {pages.map((page) => (
-                                <Button
-                                    key={page}
-                                    onClick={this.handleCloseNavMenu}
-                                    sx={{ my: 2, color: 'white', display: 'block' }}
-                                >
-                                    {page}
-                                </Button>
-                            ))} */}
-                            <MenuItem>
-                                <Typography textAlign="center">
-                                    <Link to="/auth/login">Login</Link>
-                                </Typography>
-                            </MenuItem>
-                            <MenuItem>
-                                <Typography textAlign="center">
-                                    <Link to="/auth/signup">Signup</Link>
-                                </Typography>
-                            </MenuItem>
-                        </Box>
+                        <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}></Box>
                         <div className={classes.search}>
                             <div className={classes.searchIconWrapper}>
                                 <SearchIcon />
@@ -218,6 +284,7 @@ export class Header extends Component {
                                 onChange={this.onSearch}
                             />
                         </div>
+                        {displayWritePost}
                         {displayInfoAuth}
                     </Toolbar>
                 </Container>

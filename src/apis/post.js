@@ -5,12 +5,16 @@ import { ACCESS_TOKEN_NAME, ENDPOINT } from '../constants/index'
 const endpoint = `${ENDPOINT}/posts`
 AxiosService.removeHeader(ACCESS_TOKEN_NAME)
 
-const fetchPosts = () => {
-    return AxiosService.get(endpoint)
+const fetchPosts = page => {
+    return AxiosService.get(`${endpoint}?page=${page}`)
 }
 
 const fetchPostAPI = id => {
     return AxiosService.get(`${endpoint}/${id}`)
+}
+
+const fetchPostsReAPI = id => {
+    return AxiosService.get(`${endpoint}/${id}/recommend`)
 }
 
 const fetchPostEdittingAPI = (id, token) => {
@@ -37,6 +41,7 @@ export {
     fetchPosts,
     createPostAPI,
     fetchPostAPI,
+    fetchPostsReAPI,
     fetchPostEdittingAPI,
     updatePostAPI,
     deletePostAPI
